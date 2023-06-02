@@ -1,0 +1,61 @@
+default:
+  image: python:{{ cookiecutter.python_version }}
+  before_script:
+    - pip install -U pip
+
+.base_test:
+  stage: test
+  script:
+    - pip install -U tox
+    - tox -e py
+
+stages:
+  - test
+  - build
+  - upload
+
+# Due to gitlab ci not support matrix build. So use YAML anchors:
+# https://forum.gitlab.com/t/matrix-builds-in-ci/9629
+test:py{{ cookiecutter.python_version|replace('.', '') }}:
+  image: python:{{ cookiecutter.python_version }}
+  extends:
+    - .base_test
+
+test:lint:
+  stage: test
+  script:
+    - pip install -U tox
+    - tox -e isort
+    - tox -e pylint
+
+build:
+  stage: build
+  when: on_success
+  script:
+    - pip install -U poetry
+    - poetry build
+  artifacts:
+    paths:
+      - dist/*.whl
+    expire_in: 3 days
+
+# ref: https://python-poetry.org/docs/repositories/#configuring-credentials
+# You must set POETRY_PYPI_TOKEN_PYPI in gitlab ci/cd environment variables,
+# Or set POETRY_HTTP_BASIC_PYPI_USERNAME and POETRY_HTTP_BASIC_PYPI_PASSWORD env.
+# Default poetry upload to Pypi with https://upload.pypi.org/legacy/.
+
+# You can pass `POETRY_REPOSITORY_MY_REPO=https://test.pypi.org/legacy/` env,
+# and pass `POETRY_HTTP_BASIC_MY_REPO_USERNAME` and `POETRY_HTTP_BASIC_MY_REPO_PASSWORD` to auth poetry.
+# Then exec `poetry config repositories.my_repo ${POETRY_REPOSITORY_MY_REPO}` to config repo,
+# and publish by `poetry publish --build -r my_repo`.
+deploy:poetry:
+  stage: upload
+  when: on_success
+  only:
+    refs:
+      - tags
+    variables:
+      - $POETRY_PYPI_TOKEN_PYPI
+  script:
+    - pip install -U poetry
+    - poetry publish --build
