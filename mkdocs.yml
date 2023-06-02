@@ -1,0 +1,29 @@
+site_name: AgentCircle_BackendBase
+
+theme:
+  name: material
+  language: zh
+  features:
+    - search.highlight
+  icon:
+    repo: fontawesome/brands/gitlab
+
+markdown_extensions:
+  - footnotes
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed
+
+repo_url: http://git.clicki.cn/ai/AgentCircle/AgentCircle_BackendBase
+repo_name: AgentCircle_BackendBase
+site_url: http://git.clicki.cn/ai/AgentCircle/AgentCircle_BackendBase
+
+plugins:
+  - search
+
+nav:
+  - 快速开始: index.md
+  - 项目生成: usage.md
+  - 项目开发: archiveusage.md
+  - 变更记录: changelog.md

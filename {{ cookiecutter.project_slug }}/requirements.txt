@@ -1,0 +1,17 @@
+{% if cookiecutter.init_skeleton|lower == 'y' -%}
+dynaconf
+click
+{% endif -%}
+SQLAlchemy
+fastapi
+uvicorn
+pydantic
+mysqlclient
+loguru
+
+# Dev
+tox
+pylint
+isort
+pytest
+pytest-cov
