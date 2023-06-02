@@ -1,4 +1,4 @@
-from ..models.dao.item_dao import ItemDao
+from ..models.repository.item_repo import ItemRepository
 from sqlalchemy.orm import Session
 from ..schemas.schemas import UserCreate
 from ..models import User
@@ -6,12 +6,12 @@ from ..models import User
 
 class ItemService:
     db: Session
-    item_dao: ItemDao
+    item_dao: ItemRepository
 
     def __init__(self, db: Session):
         if (hasattr(self, 'db') is False) or self.db is None:
             self.db = db
-            self.item_dao = ItemDao.instance(db)
+            self.item_dao = ItemRepository.instance(db)
    
     def read_items(self, limit: int = 10): 
         return self.item_dao.list_objects(limit=limit)
