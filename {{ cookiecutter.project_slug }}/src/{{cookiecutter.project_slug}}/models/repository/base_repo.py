@@ -2,7 +2,7 @@ from abc import ABC
 from sqlalchemy.orm import Session
 import sys
 
-class BaseDao(ABC):
+class BaseRepository(ABC):
 
     def __init__(self, session: Session, model):
         self.session = session

@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
-from .base_dao import BaseDao
+from .base_repo import BaseRepository
 from .. import User, Item
 
 
-class UserDao(BaseDao):
+class UserRepository(BaseRepository):
     _instance = None
 
     @classmethod
@@ -13,8 +13,8 @@ class UserDao(BaseDao):
         return cls._instance
 
     def __init__(self, session: Session):
-        if UserDao._instance is not None:
+        if UserRepository._instance is not None:
             raise Exception("This class is a singleton!")
         else:
             super().__init__(session, User)
-            UserDao._instance = self
+            UserRepository._instance = self
